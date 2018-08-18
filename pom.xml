@@ -8,7 +8,7 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
-	<name>curso-modelagem-conceitual</name>
+	<nome>curso-modelagem-conceitual</nome>
 	<description>Demo project for Spring Boot</description>
 
 	<parent>
@@ -52,6 +52,10 @@
 			<artifactId>spring-boot-devtools</artifactId>
 		</dependency>
 
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+        </dependency>
 
 
 	</dependencies>
