@@ -16,7 +16,7 @@ public class DevConfig {
     @Autowired
     private DBService dbService;
 
-    @Value("${spring.jpa.properties.hibernate.format_sql}")
+    @Value("${spring.jpa.hibernate.ddl-auto}")
     private String strategy;
 
     @Bean boolean instantiateDatabase() throws ParseException {
