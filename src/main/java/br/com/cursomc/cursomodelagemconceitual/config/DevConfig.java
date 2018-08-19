@@ -1,6 +1,8 @@
 package br.com.cursomc.cursomodelagemconceitual.config;
 
 import br.com.cursomc.cursomodelagemconceitual.services.DBService;
+import br.com.cursomc.cursomodelagemconceitual.services.EmailService;
+import br.com.cursomc.cursomodelagemconceitual.services.SmtpEmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -19,7 +21,8 @@ public class DevConfig {
     @Value("${spring.jpa.hibernate.ddl-auto}")
     private String strategy;
 
-    @Bean boolean instantiateDatabase() throws ParseException {
+    @Bean
+    public boolean instantiateDatabase() throws ParseException {
 
         if (!"create".equals(strategy)) {
             return false;
@@ -27,6 +30,11 @@ public class DevConfig {
 
         dbService.instantiateTestDatabase();
         return true;
+    }
+
+    @Bean
+    public EmailService emailService() {
+        return new SmtpEmailService();
     }
 
 }

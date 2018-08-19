@@ -1,6 +1,8 @@
 package br.com.cursomc.cursomodelagemconceitual.config;
 
 import br.com.cursomc.cursomodelagemconceitual.services.DBService;
+import br.com.cursomc.cursomodelagemconceitual.services.EmailService;
+import br.com.cursomc.cursomodelagemconceitual.services.MockEmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,10 +17,17 @@ public class TestConfig {
     @Autowired
     private DBService dbService;
 
-    @Bean boolean instantiateDatabase() throws ParseException {
+    @Bean
+    public boolean instantiateDatabase() throws ParseException {
 
         dbService.instantiateTestDatabase();
         return true;
     }
+
+    @Bean
+    public EmailService emailService() {
+        return new MockEmailService();
+    }
+
 
 }
