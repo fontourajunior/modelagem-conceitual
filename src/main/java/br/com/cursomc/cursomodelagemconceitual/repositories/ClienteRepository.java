@@ -13,4 +13,6 @@ public interface ClienteRepository extends JpaRepository<Cliente, Integer> {
     @Transactional(readOnly = true)
     Integer countAllByEmailAndIdNot(String email, Integer id);
 
+    @Transactional(readOnly = true)
+    Cliente findByEmail(String email);
 }
