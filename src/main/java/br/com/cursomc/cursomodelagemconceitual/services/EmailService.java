@@ -1,5 +1,6 @@
 package br.com.cursomc.cursomodelagemconceitual.services;
 
+import br.com.cursomc.cursomodelagemconceitual.domain.Cliente;
 import br.com.cursomc.cursomodelagemconceitual.domain.Pedido;
 import org.springframework.mail.SimpleMailMessage;
 
@@ -15,4 +16,5 @@ public interface EmailService {
 
     void sendHtmlMail(MimeMessage message);
 
+    void sendNewPasswordEmail(Cliente cliente, String newPassword);
 }

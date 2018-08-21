@@ -3,11 +3,14 @@ package br.com.cursomc.cursomodelagemconceitual.services;
 import br.com.cursomc.cursomodelagemconceitual.domain.Cidade;
 import br.com.cursomc.cursomodelagemconceitual.domain.Cliente;
 import br.com.cursomc.cursomodelagemconceitual.domain.Endereco;
+import br.com.cursomc.cursomodelagemconceitual.domain.enums.Perfil;
 import br.com.cursomc.cursomodelagemconceitual.domain.enums.TipoCliente;
 import br.com.cursomc.cursomodelagemconceitual.dto.ClienteDTO;
 import br.com.cursomc.cursomodelagemconceitual.dto.ClienteNewDTO;
 import br.com.cursomc.cursomodelagemconceitual.repositories.ClienteRepository;
 import br.com.cursomc.cursomodelagemconceitual.repositories.EnderecoRepository;
+import br.com.cursomc.cursomodelagemconceitual.security.UserSS;
+import br.com.cursomc.cursomodelagemconceitual.services.exceptions.AuthorizationException;
 import br.com.cursomc.cursomodelagemconceitual.services.exceptions.DataIntegrityException;
 import br.com.cursomc.cursomodelagemconceitual.services.exceptions.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +37,13 @@ public class ClienteService {
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     public Cliente findOne(Integer id) {
+
+        UserSS userAuthenticated = UserService.authenticated();
+
+        if (userAuthenticated == null || !userAuthenticated.hasRole(Perfil.ADMIN) && !id.equals(userAuthenticated.getId()) ) {
+            throw new AuthorizationException("Acesso negado");
+        }
+
         return clienteRepository.findById(id).orElseThrow(() -> new ObjectNotFoundException("Objeto não encontrado! Id: " + id
                                                                                              + ", Tipo: " + Cliente.class.getName()));
     }

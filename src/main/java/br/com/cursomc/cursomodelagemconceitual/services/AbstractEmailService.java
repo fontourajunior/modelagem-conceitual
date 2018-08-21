@@ -1,5 +1,6 @@
 package br.com.cursomc.cursomodelagemconceitual.services;
 
+import br.com.cursomc.cursomodelagemconceitual.domain.Cliente;
 import br.com.cursomc.cursomodelagemconceitual.domain.Pedido;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -69,5 +70,23 @@ public abstract class AbstractEmailService implements EmailService {
         context.setVariable("pedido", pedido);
         return templateEngine.process("email/confirmacaoPedido", context);
     }
+
+    @Override
+    public void sendNewPasswordEmail(Cliente cliente, String newPassword) {
+        SimpleMailMessage messageEmail = preparePasswordEmail(cliente, newPassword);
+        sendMail(messageEmail);
+    }
+
+    protected SimpleMailMessage preparePasswordEmail(Cliente cliente, String newPassword) {
+        SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
+        simpleMailMessage.setTo(cliente.getEmail());
+        simpleMailMessage.setFrom(sender);
+        simpleMailMessage.setSubject("Solicitação de nova senha");
+        simpleMailMessage.setSentDate(new Date(System.currentTimeMillis()));
+        simpleMailMessage.setText("Nova senha: " + newPassword);
+
+        return simpleMailMessage;
+    }
+
 
 }

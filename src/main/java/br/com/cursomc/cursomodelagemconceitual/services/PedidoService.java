@@ -1,5 +1,6 @@
 package br.com.cursomc.cursomodelagemconceitual.services;
 
+import br.com.cursomc.cursomodelagemconceitual.domain.Cliente;
 import br.com.cursomc.cursomodelagemconceitual.domain.ItemPedido;
 import br.com.cursomc.cursomodelagemconceitual.domain.PagamentoComBoleto;
 import br.com.cursomc.cursomodelagemconceitual.domain.Pedido;
@@ -7,8 +8,13 @@ import br.com.cursomc.cursomodelagemconceitual.domain.enums.EstadoPagamento;
 import br.com.cursomc.cursomodelagemconceitual.repositories.ItemPedidoRepository;
 import br.com.cursomc.cursomodelagemconceitual.repositories.PagamentoRepository;
 import br.com.cursomc.cursomodelagemconceitual.repositories.PedidoRepository;
+import br.com.cursomc.cursomodelagemconceitual.security.UserSS;
+import br.com.cursomc.cursomodelagemconceitual.services.exceptions.AuthorizationException;
 import br.com.cursomc.cursomodelagemconceitual.services.exceptions.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -71,6 +77,16 @@ public class PedidoService {
         emailService.sendOrderConfirmationHtmlEMail(pedido);
 
         return pedido;
+    }
+
+    public Page<Pedido> findPage(Integer page, Integer linesPerPage, String orderBy, String direction) {
+        UserSS userAuthenticated = UserService.authenticated();
+        if (userAuthenticated == null) {
+            throw new AuthorizationException("Acesso negado");
+        }
+        Cliente cliente = clienteService.findOne(userAuthenticated.getId());
+        PageRequest pageRequest = PageRequest.of(page, linesPerPage, Sort.Direction.valueOf(direction), orderBy);
+        return repository.findByCliente(cliente, pageRequest);
     }
 
 }
